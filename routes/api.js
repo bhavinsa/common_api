@@ -22,8 +22,8 @@ router.route("/getCompanies").post(company.getCompanies);
 router.route("/removeCompany").post(company.removeCompany);
 
 router.route("/userLogin").post(user.userLogin);
-// router.route("/addUser").post(loginAuth.requiresLogin, user.addUser);
-router.route("/addUser").post(user.addUser);
+router.route("/addUser").post(loginAuth.requiresLogin, user.addUser);
+// router.route("/addUser").post(user.addUser);
 router.route("/editUser").post(user.editUser);
 router.route("/getUsers").post(user.getUsers);
 router.route("/removeUser").post(user.removeUser);

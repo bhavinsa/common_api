@@ -1,14 +1,12 @@
 var jwt = require(basePath + "helper/jwt");
 
 exports.requiresLogin = function(req, res, next) {
-  var token =
-    (req.body && req.body.secret_token) ||
-    (req.query && req.query.secret_token);
-  if (token != undefined && token != null) {
-    console.log(token);
+  var token = req.body && req.body.secret_token;
+  console.log(token);
+  if (token) {
     var uid = jwt.getUserIdFormSecretToken(token);
     if (uid) {
-      dbconnection.query("SELECT * FROM user where id = ?" + uid, function(
+      dbconnection.query("SELECT * FROM user where id =" + uid, function(
         err,
         result
       ) {
@@ -17,11 +15,11 @@ exports.requiresLogin = function(req, res, next) {
           logger.info("requiresLogin user error  " + JSON.stringify(err));
         } else {
           logger.info("requiresLogin user result  " + JSON.stringify(result));
-          if (result[0] != undefined) {
+          if (result[0] == undefined) {
             // next();
 
             dbconnection.query(
-              "SELECT * FROM admin where id = ?" + uid,
+              "SELECT * FROM admin_user where id = " + uid,
               function(err, adminResult) {
                 let status;
                 if (err) {
@@ -46,12 +44,7 @@ exports.requiresLogin = function(req, res, next) {
               }
             );
           } else {
-            response = {
-              success: 0,
-              auth_status: 401,
-              message: "Secret token is not valid, Please login again."
-            };
-            utils.sendResponse(res, response);
+            next();
           }
         }
       });
